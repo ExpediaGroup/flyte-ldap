@@ -1,3 +1,6 @@
+![Build Status](https://travis-ci.org/HotelsDotCom/flyte-ldap.svg?branch=master)
+
+
 ## Overview
 The LDAP pack provides the ability to connect to and search directories, e.g. Microsoft Active Directory.
 
