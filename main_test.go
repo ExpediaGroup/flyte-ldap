@@ -17,11 +17,11 @@ limitations under the License.
 package main
 
 import (
-	"testing"
-	"net/url"
 	"github.com/HotelsDotCom/go-logger/loggertest"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"net/url"
+	"testing"
 )
 
 func TestConfigVal_shouldReturnEnvironmentConfigValue(t *testing.T) {
@@ -99,7 +99,7 @@ func TestCreateUrl_shouldLogFatalIfStringUrlCannotBeParsed(t *testing.T) {
 		if r := recover(); r != nil {
 			logMessages := loggertest.GetLogMessages()
 			require.Len(t, logMessages, 1)
-			assert.Contains(t, logMessages[0].RawMessage, "Cannot parse url: '://hello' error: 'parse ://hello: missing protocol scheme'")
+			assert.Contains(t, logMessages[0].RawMessage, "Cannot parse url: '://hello' error: 'parse \"://hello\": missing protocol scheme'")
 		}
 	}()
 

@@ -25,6 +25,7 @@ import (
 	"reflect"
 	"strings"
 	"testing"
+	"time"
 )
 
 const (
@@ -92,9 +93,25 @@ func startLdapServer(quit chan bool, br ldapserver.LDAPResultCode) {
 		// start the server
 		log.Printf("Starting example LDAP server on %s", ldapServerUrl)
 		if err := s.ListenAndServe(ldapServerUrl); err != nil {
-			log.Fatal("LDAP Server Failed: %s", err.Error())
+			log.Fatalf("LDAP Server Failed: %s", err.Error())
 		}
 	}()
+
+	waitForPort(5)
+}
+
+func waitForPort(retries int) {
+	if retries < 0 {
+		return
+	}
+	conn, err := net.DialTimeout("tcp", ldapServerUrl, 2*time.Second)
+	if err != nil {
+		time.Sleep(1 * time.Second)
+		waitForPort(retries - 1)
+	}
+	if conn != nil {
+		defer conn.Close()
+	}
 }
 
 func stopLdapServer(quit chan bool) {
@@ -148,7 +165,7 @@ func TestSearchShouldCallLdapSearchWithCorrectParametersAndReturnSearchResults(t
 		t.Errorf("BaseDn passed to the LDAP group is incorrect. Expected: '%s', actual: '%s'.", searchRequest.BaseDn, ldapSearcher.searchRequest.BaseDN)
 	}
 	if ldapSearcher.searchRequest.TimeLimit != searchRequest.SearchTimeout {
-		t.Errorf("Search timeout passed to the LDAP group is incorrect. Expected: '%s', actual: '%s'.", searchRequest.SearchTimeout, ldapSearcher.searchRequest.TimeLimit)
+		t.Errorf("Search timeout passed to the LDAP group is incorrect. Expected: '%d', actual: '%d'.", searchRequest.SearchTimeout, ldapSearcher.searchRequest.TimeLimit)
 	}
 	if ldapSearcher.searchRequest.Filter != searchRequest.SearchFilter {
 		t.Errorf("Search filter passed to the LDAP group is incorrect. Expected: '%s', actual: '%s'.", searchRequest.SearchFilter, ldapSearcher.searchRequest.Filter)

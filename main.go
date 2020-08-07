@@ -17,14 +17,14 @@ limitations under the License.
 package main
 
 import (
-	"net/url"
-	"os"
-	"github.com/HotelsDotCom/go-logger"
+	"github.com/ExpediaGroup/flyte-ldap/command"
+	"github.com/ExpediaGroup/flyte-ldap/group"
+	"github.com/ExpediaGroup/flyte-ldap/ldap"
 	"github.com/HotelsDotCom/flyte-client/client"
 	"github.com/HotelsDotCom/flyte-client/flyte"
-	"github.com/HotelsDotCom/flyte-ldap/command"
-	"github.com/HotelsDotCom/flyte-ldap/group"
-	"github.com/HotelsDotCom/flyte-ldap/ldap"
+	"github.com/HotelsDotCom/go-logger"
+	"net/url"
+	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -36,7 +36,7 @@ type environment interface {
 	getValueFor(name string) string
 }
 
-type osEnvironment struct {}
+type osEnvironment struct{}
 
 func (o *osEnvironment) getValueFor(name string) string {
 	return os.Getenv(name)
@@ -63,7 +63,7 @@ func main() {
 		Commands: []flyte.Command{
 			command.GetGroupsCommand(searcher, searchDetails),
 		},
-		HelpURL: createURL("https://github.com/HotelsDotCom/flyte-ldap/blob/master/README.md"),
+		HelpURL: createURL("https://github.com/ExpediaGroup/flyte-ldap/blob/master/README.md"),
 	}
 
 	pack := flyte.NewPack(packDef, client.NewClient(createURL(configVal("FLYTE_API_URL")), 10*time.Second))

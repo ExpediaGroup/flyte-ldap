@@ -18,8 +18,8 @@ package command
 
 import (
 	"encoding/json"
+	"github.com/ExpediaGroup/flyte-ldap/group"
 	"github.com/HotelsDotCom/flyte-client/flyte"
-	"github.com/HotelsDotCom/flyte-ldap/group"
 )
 
 const getGroupsCommandName = "GetGroups"

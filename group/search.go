@@ -17,8 +17,8 @@ limitations under the License.
 package group
 
 import (
+	"github.com/ExpediaGroup/flyte-ldap/ldap"
 	ldapClient "gopkg.in/ldap.v2"
-	"github.com/HotelsDotCom/flyte-ldap/ldap"
 	"strings"
 )
 
