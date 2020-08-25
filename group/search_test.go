@@ -18,9 +18,9 @@ package group
 
 import (
 	"errors"
+	"github.com/ExpediaGroup/flyte-ldap/ldap"
 	ldapClient "gopkg.in/ldap.v2"
 	"reflect"
-	"github.com/HotelsDotCom/flyte-ldap/ldap"
 	"testing"
 )
 
@@ -181,7 +181,7 @@ func TestCorrectParametersArePassedToClientSearch(t *testing.T) {
 		t.Errorf("Group filter is wrong. Should be '(mailNickname=dave-jones)', is: %s", searchRequest.SearchFilter)
 	}
 	if searchRequest.SearchTimeout != 20 {
-		t.Errorf("Search timeout is wrong. Should be '20', is: %s", searchRequest.SearchTimeout)
+		t.Errorf("Search timeout is wrong. Should be '20', is: %d", searchRequest.SearchTimeout)
 	}
 }
 

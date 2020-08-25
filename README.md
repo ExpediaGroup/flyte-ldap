@@ -1,6 +1,6 @@
 # flyte-ldap
 
-![Build Status](https://travis-ci.org/HotelsDotCom/flyte-ldap.svg?branch=master)
+![Build Status](https://travis-ci.org/ExpediaGroup/flyte-ldap.svg?branch=master)
 [![Docker Stars](https://img.shields.io/docker/stars/hotelsdotcom/flyte-ldap.svg)](https://hub.docker.com/r/hotelsdotcom/flyte-ldap)
 [![Docker Pulls](https://img.shields.io/docker/pulls/hotelsdotcom/flyte-ldap.svg)](https://hub.docker.com/r/hotelsdotcom/flyte-ldap)
 

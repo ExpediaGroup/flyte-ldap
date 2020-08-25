@@ -19,8 +19,8 @@ package command
 import (
 	"encoding/json"
 	"errors"
+	"github.com/ExpediaGroup/flyte-ldap/group"
 	"reflect"
-	"github.com/HotelsDotCom/flyte-ldap/group"
 	"strings"
 	"testing"
 )
