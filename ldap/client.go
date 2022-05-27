@@ -79,7 +79,6 @@ func (c *ldapClient) ConnectTls() error {
 	var config tls.Config
 	config.InsecureSkipVerify = true
 	ldapConn, err := ldap.DialTLS("tcp", c.ldapServerUrl, &config)
-	logger.Debugf("%v got URL as ", c.ldapServerUrl)
 	if err != nil {
 		return fmt.Errorf("Cannot connect to LDAP: %v", err)
 	}
