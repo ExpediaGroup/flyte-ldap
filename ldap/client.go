@@ -17,12 +17,15 @@ limitations under the License.
 package ldap
 
 import (
+	"crypto/tls"
 	"fmt"
+	"github.com/HotelsDotCom/go-logger"
 	"gopkg.in/ldap.v2"
 )
 
 type Client interface {
 	Connect() error
+	ConnectTls() error
 	Search(sr SearchRequest) (*ldap.SearchResult, error)
 	Close()
 }
@@ -56,6 +59,27 @@ func NewClient(bindUsername, bindPassword, ldapServerUrl string) Client {
 
 func (c *ldapClient) Connect() error {
 	ldapConn, err := ldap.Dial("tcp", c.ldapServerUrl)
+	logger.Debugf("%v got URL as ", c.ldapServerUrl)
+	if err != nil {
+		return fmt.Errorf("Cannot connect to LDAP: %v", err)
+	}
+
+	err = ldapConn.Bind(c.bindUsername, c.bindPassword)
+	if err != nil {
+		ldapConn.Close()
+		return fmt.Errorf("Cannot bind to LDAP: %v", err)
+	}
+
+	c.ldapSearcher = ldapConn
+
+	return nil
+}
+
+func (c *ldapClient) ConnectTls() error {
+	var config tls.Config
+	config.InsecureSkipVerify = true
+	ldapConn, err := ldap.DialTLS("tcp", c.ldapServerUrl, &config)
+	logger.Debugf("%v got URL as ", c.ldapServerUrl)
 	if err != nil {
 		return fmt.Errorf("Cannot connect to LDAP: %v", err)
 	}

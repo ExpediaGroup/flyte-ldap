@@ -43,7 +43,7 @@ func NewSearcher(client ldap.Client) Searcher {
 }
 
 func (searcher *searcher) GetGroupsFor(sd *SearchDetails, username string) ([]string, error) {
-	if err := searcher.client.Connect(); err != nil {
+	if err := searcher.client.ConnectTls(); err != nil {
 		return nil, err
 	}
 	defer searcher.client.Close()

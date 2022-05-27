@@ -20,6 +20,7 @@ import (
 	"encoding/json"
 	"github.com/ExpediaGroup/flyte-ldap/group"
 	"github.com/HotelsDotCom/flyte-client/flyte"
+	"github.com/HotelsDotCom/go-logger"
 )
 
 const getGroupsCommandName = "GetGroups"
@@ -64,8 +65,10 @@ func getGroupsHandler(searcher group.Searcher, searchDetails *group.SearchDetail
 		// group search
 		userGroups, err := searcher.GetGroupsFor(searchDetails, args.UserName)
 		if err != nil {
+			logger.Debugf("Got error as %v", err)
 			return NewGetGroupsErrorEvent(err.Error(), args.UserName)
 		}
+		logger.Debugf("Got the user groups as %v", userGroups)
 
 		return flyte.Event{
 			EventDef: getGroupsSuccessEventDef,

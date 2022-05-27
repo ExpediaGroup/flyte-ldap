@@ -32,6 +32,10 @@ func TestClientConnectAndCloseAreCalledWhenCallingGetGroupsFor(t *testing.T) {
 			isClientConnectCalled = true
 			return nil
 		},
+		connectTls: func() error {
+			isClientConnectCalled = true
+			return nil
+		},
 		close: func() {
 			isClientCloseCalled = true
 		},
@@ -57,6 +61,9 @@ func TestClientConnectAndCloseAreCalledWhenCallingGetGroupsFor(t *testing.T) {
 func TestErrorIsReturnedIfClientConnectError(t *testing.T) {
 	mockClient := &mockClient{
 		connect: func() error {
+			return errors.New("Meh")
+		},
+		connectTls: func() error {
 			return errors.New("Meh")
 		},
 	}
@@ -91,7 +98,10 @@ func TestSearchShouldReturnsUserGroups(t *testing.T) {
 	}
 	mockClient := &mockClient{
 		connect: func() error { return nil },
-		close:   func() {},
+		connectTls: func() error {
+			return nil
+		},
+		close: func() {},
 		search: func(sr ldap.SearchRequest) (*ldapClient.SearchResult, error) {
 			return returnedSearchResults, nil
 		}}
@@ -120,7 +130,10 @@ func TestSearchShouldReturnsUserGroups(t *testing.T) {
 func TestSearchShouldNotReturnsUserGroupsIfNoSearchResultsAreReturned(t *testing.T) {
 	mockClient := &mockClient{
 		connect: func() error { return nil },
-		close:   func() {},
+		connectTls: func() error {
+			return nil
+		},
+		close: func() {},
 		search: func(sr ldap.SearchRequest) (*ldapClient.SearchResult, error) {
 			return &ldapClient.SearchResult{}, nil
 		}}
@@ -139,8 +152,10 @@ func TestSearchShouldNotReturnsUserGroupsIfNoSearchResultsAreReturned(t *testing
 
 func TestSearchShouldReturnClientSearchError(t *testing.T) {
 	mockClient := &mockClient{
-		connect: func() error { return nil },
-		close:   func() {},
+		connect:    func() error { return nil },
+		connectTls: func() error { return nil },
+
+		close: func() {},
 		search: func(sr ldap.SearchRequest) (*ldapClient.SearchResult, error) {
 			return nil, errors.New("Some error")
 		}}
@@ -160,8 +175,9 @@ func TestSearchShouldReturnClientSearchError(t *testing.T) {
 func TestCorrectParametersArePassedToClientSearch(t *testing.T) {
 	var searchRequest ldap.SearchRequest
 	mockClient := &mockClient{
-		connect: func() error { return nil },
-		close:   func() {},
+		connect:    func() error { return nil },
+		connectTls: func() error { return nil },
+		close:      func() {},
 		search: func(sr ldap.SearchRequest) (*ldapClient.SearchResult, error) {
 			searchRequest = sr
 			return &ldapClient.SearchResult{}, nil
@@ -239,9 +255,14 @@ func someSearchDetails() *SearchDetails {
 }
 
 type mockClient struct {
-	connect func() error
-	close   func()
-	search  func(sr ldap.SearchRequest) (*ldapClient.SearchResult, error)
+	connect    func() error
+	connectTls func() error
+	close      func()
+	search     func(sr ldap.SearchRequest) (*ldapClient.SearchResult, error)
+}
+
+func (c *mockClient) ConnectTls() error {
+	return c.connectTls()
 }
 
 func (c *mockClient) Connect() error {
