@@ -13,10 +13,10 @@ To build and run from the command line:
 * Clone this repo
 * Run `dep ensure` (must have [dep](https://github.com/golang/dep) installed )
 * Run `go build`
-* Run `FLYTE_API_URL=<URL> BIND_USERNAME=<USERNAME> BIND_PASSWORD=<PASSWORD> LDAP_URL=<LDAP_URL> GROUP_ATTRIBUTE=<GROUP_ATTRIBUTE> ATTRIBUTES=<ATTRIBUTES> BASE_DN=<BASE_DN> SEARCH_FILTER=<SEARCH_FILTER> SEARCH_TIMEOUT_IN_SECONDS=<SEARCH_TIMEOUT_IN_SECONDS> ./flyte-ldap`
+* Run `FLYTE_API_URL=<URL> BIND_USERNAME=<USERNAME> BIND_PASSWORD=<PASSWORD> LDAP_URL=<LDAP_URL> GROUP_ATTRIBUTE=<GROUP_ATTRIBUTE> ATTRIBUTES=<ATTRIBUTES> BASE_DN=<BASE_DN> SEARCH_FILTER=<SEARCH_FILTER> SEARCH_TIMEOUT_IN_SECONDS=<SEARCH_TIMEOUT_IN_SECONDS> ENABLE_TLS=<True/False> INSECURE_SKIP_VERIFY=<True/False> ./flyte-ldap`
 * All of these environment variables need to be provided with the exception of 'SEARCH_TIMEOUT_IN_SECONDS', which has a default (see main.go).
 #### Example
-* Run `FLYTE_API_URL='http://myflyteapi.com' BIND_USERNAME='someUsername' BIND_PASSWORD='somePassword' LDAP_URL='my.ldap.com:123' GROUP_ATTRIBUTE='cn' ATTRIBUTES='memberOf' BASE_DN='DC=QQ,DC=WOW,DC=XYZ,DC=com' SEARCH_FILTER='(mailNickname={username})' SEARCH_TIMEOUT_IN_SECONDS='20' ./flyte-ldap`
+* Run `FLYTE_API_URL='http://myflyteapi.com' BIND_USERNAME='someUsername' BIND_PASSWORD='somePassword' LDAP_URL='my.ldap.com:123' GROUP_ATTRIBUTE='cn' ATTRIBUTES='memberOf' BASE_DN='DC=QQ,DC=WOW,DC=XYZ,DC=com' SEARCH_FILTER='(mailNickname={username})' SEARCH_TIMEOUT_IN_SECONDS='20'  ENABLE_TLS=<True/False> INSECURE_SKIP_VERIFY=<True/False> ./flyte-ldap`
 
 ### Run tests
 To run the unit tests:
@@ -25,10 +25,10 @@ To run the unit tests:
 ### Docker
 To build and run from docker
 * Run `docker build -t flyte-ldap .`
-* Run `docker run -e FLYTE_API_URL=<URL> -e BIND_USERNAME=<USERNAME> -e BIND_PASSWORD=<PASSWORD> -e LDAP_URL=<LDAP_URL> -e GROUP_ATTRIBUTE=<GROUP_ATTRIBUTE> -e ATTRIBUTES=<ATTRIBUTES> -e BASE_DN=<BASE_DN> -e SEARCH_FILTER=<SEARCH_FILTER> -e SEARCH_TIMEOUT_IN_SECONDS=<SEARCH_TIMEOUT_IN_SECONDS> flyte-ldap`
+* Run `docker run -e FLYTE_API_URL=<URL> -e BIND_USERNAME=<USERNAME> -e BIND_PASSWORD=<PASSWORD> -e LDAP_URL=<LDAP_URL> -e GROUP_ATTRIBUTE=<GROUP_ATTRIBUTE> -e ATTRIBUTES=<ATTRIBUTES> -e BASE_DN=<BASE_DN> -e SEARCH_FILTER=<SEARCH_FILTER> -e SEARCH_TIMEOUT_IN_SECONDS=<SEARCH_TIMEOUT_IN_SECONDS> -e ENABLE_TLS='True'  -e  INSECURE_SKIP_VERIFY='True' flyte-ldap`
 * All of these environment variables need to be provided with the exception of 'SEARCH_TIMEOUT_IN_SECONDS', which has a default (see main.go).
 #### Example
-* Run `docker run -e FLYTE_API_URL='http://myflyteapi.com' -e BIND_USERNAME='someUsername' -e BIND_PASSWORD='somePassword' -e LDAP_URL='my.ldap.com:123' -e GROUP_ATTRIBUTE='cn' -e ATTRIBUTES='memberOf' -e BASE_DN='DC=QQ,DC=WOW,DC=XYZ,DC=com' -e SEARCH_FILTER='(mailNickname={username})' -e SEARCH_TIMEOUT_IN_SECONDS='20' flyte-ldap`
+* Run `docker run -e FLYTE_API_URL='http://myflyteapi.com' -e BIND_USERNAME='someUsername' -e BIND_PASSWORD='somePassword' -e LDAP_URL='my.ldap.com:123' -e GROUP_ATTRIBUTE='cn' -e ATTRIBUTES='memberOf' -e BASE_DN='DC=QQ,DC=WOW,DC=XYZ,DC=com' -e SEARCH_FILTER='(mailNickname={username})' -e SEARCH_TIMEOUT_IN_SECONDS='20' -e ENABLE_TLS='True'  -e  INSECURE_SKIP_VERIFY='True' flyte-ldap`
 
 
 #### LDAP Attribute explanation

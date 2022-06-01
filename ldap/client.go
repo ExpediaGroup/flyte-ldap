@@ -25,7 +25,7 @@ import (
 
 type Client interface {
 	Connect() error
-	ConnectTls() error
+	ConnectTls(insecureSkipVerify bool) error
 	Search(sr SearchRequest) (*ldap.SearchResult, error)
 	Close()
 }
@@ -75,10 +75,8 @@ func (c *ldapClient) Connect() error {
 	return nil
 }
 
-func (c *ldapClient) ConnectTls() error {
-	var config tls.Config
-	config.InsecureSkipVerify = true
-	ldapConn, err := ldap.DialTLS("tcp", c.ldapServerUrl, &config)
+func (c *ldapClient) ConnectTls(insecureSkipVerify bool) error {
+	ldapConn, err := ldap.DialTLS("tcp", c.ldapServerUrl, &tls.Config{InsecureSkipVerify: insecureSkipVerify})
 	if err != nil {
 		return fmt.Errorf("Cannot connect to LDAP: %v", err)
 	}

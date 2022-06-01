@@ -32,7 +32,7 @@ func TestClientConnectAndCloseAreCalledWhenCallingGetGroupsFor(t *testing.T) {
 			isClientConnectCalled = true
 			return nil
 		},
-		connectTls: func() error {
+		connectTls: func(insecureSkipVerify bool) error {
 			isClientConnectCalled = true
 			return nil
 		},
@@ -63,7 +63,7 @@ func TestErrorIsReturnedIfClientConnectError(t *testing.T) {
 		connect: func() error {
 			return errors.New("Meh")
 		},
-		connectTls: func() error {
+		connectTls: func(insecureSkipVerify bool) error {
 			return errors.New("Meh")
 		},
 	}
@@ -98,7 +98,7 @@ func TestSearchShouldReturnsUserGroups(t *testing.T) {
 	}
 	mockClient := &mockClient{
 		connect: func() error { return nil },
-		connectTls: func() error {
+		connectTls: func(insecureSkipVerify bool) error {
 			return nil
 		},
 		close: func() {},
@@ -130,7 +130,7 @@ func TestSearchShouldReturnsUserGroups(t *testing.T) {
 func TestSearchShouldNotReturnsUserGroupsIfNoSearchResultsAreReturned(t *testing.T) {
 	mockClient := &mockClient{
 		connect: func() error { return nil },
-		connectTls: func() error {
+		connectTls: func(insecureSkipVerify bool) error {
 			return nil
 		},
 		close: func() {},
@@ -153,7 +153,7 @@ func TestSearchShouldNotReturnsUserGroupsIfNoSearchResultsAreReturned(t *testing
 func TestSearchShouldReturnClientSearchError(t *testing.T) {
 	mockClient := &mockClient{
 		connect:    func() error { return nil },
-		connectTls: func() error { return nil },
+		connectTls: func(insecureSkipVerify bool) error { return nil },
 
 		close: func() {},
 		search: func(sr ldap.SearchRequest) (*ldapClient.SearchResult, error) {
@@ -176,7 +176,7 @@ func TestCorrectParametersArePassedToClientSearch(t *testing.T) {
 	var searchRequest ldap.SearchRequest
 	mockClient := &mockClient{
 		connect:    func() error { return nil },
-		connectTls: func() error { return nil },
+		connectTls: func(insecureSkipVerify bool) error { return nil },
 		close:      func() {},
 		search: func(sr ldap.SearchRequest) (*ldapClient.SearchResult, error) {
 			searchRequest = sr
@@ -256,13 +256,13 @@ func someSearchDetails() *SearchDetails {
 
 type mockClient struct {
 	connect    func() error
-	connectTls func() error
+	connectTls func(insecureSkipVerify bool) error
 	close      func()
 	search     func(sr ldap.SearchRequest) (*ldapClient.SearchResult, error)
 }
 
-func (c *mockClient) ConnectTls() error {
-	return c.connectTls()
+func (c *mockClient) ConnectTls(insecureSkipVerify bool) error {
+	return c.connectTls(true)
 }
 
 func (c *mockClient) Connect() error {

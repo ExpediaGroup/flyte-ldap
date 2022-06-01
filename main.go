@@ -51,16 +51,21 @@ func main() {
 	if err != nil {
 		logger.Fatalf("TLS enabled flag is not provided '%v' Error: %v", configVal("ENABLE_TLS"), err)
 	}
+	insecureSkipVerify, err := strconv.ParseBool(configVal("INSECURE_SKIP_VERIFY"))
+	if err != nil {
+		logger.Fatalf("TLS enabled flag is not provided '%v' Error: %v", configVal("INSECURE_SKIP_VERIFY"), err)
+	}
 
 	lc := ldap.NewClient(configVal("BIND_USERNAME"), configVal("BIND_PASSWORD"), configVal("LDAP_URL"))
 	searcher := group.NewSearcher(lc)
 	searchDetails := &group.SearchDetails{
-		Attributes:     strings.Split(configVal("ATTRIBUTES"), ","),
-		BaseDn:         configVal("BASE_DN"),
-		SearchFilter:   configVal("SEARCH_FILTER"),
-		SearchTimeout:  searchTimeout,
-		GroupAttribute: configVal("GROUP_ATTRIBUTE"),
-		EnableTLS:      tlsEnabledFlag,
+		Attributes:         strings.Split(configVal("ATTRIBUTES"), ","),
+		BaseDn:             configVal("BASE_DN"),
+		SearchFilter:       configVal("SEARCH_FILTER"),
+		SearchTimeout:      searchTimeout,
+		GroupAttribute:     configVal("GROUP_ATTRIBUTE"),
+		EnableTLS:          tlsEnabledFlag,
+		InsecureSkipVerify: insecureSkipVerify,
 	}
 
 	packDef := flyte.PackDef{
