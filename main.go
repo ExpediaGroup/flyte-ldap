@@ -53,7 +53,7 @@ func main() {
 	}
 	insecureSkipVerify, err := strconv.ParseBool(configVal("INSECURE_SKIP_VERIFY"))
 	if err != nil {
-		logger.Fatalf("TLS enabled flag is not provided '%v' Error: %v", configVal("INSECURE_SKIP_VERIFY"), err)
+		logger.Fatalf("InsecureSkipVerify flag is not provided '%v' Error: %v", configVal("INSECURE_SKIP_VERIFY"), err)
 	}
 
 	lc := ldap.NewClient(configVal("BIND_USERNAME"), configVal("BIND_PASSWORD"), configVal("LDAP_URL"))
