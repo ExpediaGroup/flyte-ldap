@@ -28,6 +28,7 @@ type SearchDetails struct {
 	SearchFilter   string
 	GroupAttribute string // the attribute that gives the name of the group from the attribute values, e.g. 'cn'
 	SearchTimeout  int
+	EnableTLS      bool
 }
 
 type Searcher interface {
@@ -43,7 +44,13 @@ func NewSearcher(client ldap.Client) Searcher {
 }
 
 func (searcher *searcher) GetGroupsFor(sd *SearchDetails, username string) ([]string, error) {
-	if err := searcher.client.ConnectTls(); err != nil {
+	var err error
+	if sd.EnableTLS == true {
+		err = searcher.client.ConnectTls()
+	} else {
+		err = searcher.client.Connect()
+	}
+	if err != nil {
 		return nil, err
 	}
 	defer searcher.client.Close()
