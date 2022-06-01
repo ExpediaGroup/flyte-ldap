@@ -4,7 +4,7 @@
 [![Docker Stars](https://img.shields.io/docker/stars/hotelsdotcom/flyte-ldap.svg)](https://hub.docker.com/r/hotelsdotcom/flyte-ldap)
 [![Docker Pulls](https://img.shields.io/docker/pulls/hotelsdotcom/flyte-ldap.svg)](https://hub.docker.com/r/hotelsdotcom/flyte-ldap)
 
-##### Overview
+## Overview
 The LDAP pack provides the ability to connect to and search directories, e.g. Microsoft Active Directory.
 
 ## Build and Run
