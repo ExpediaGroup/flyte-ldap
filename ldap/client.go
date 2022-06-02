@@ -17,12 +17,14 @@ limitations under the License.
 package ldap
 
 import (
+	"crypto/tls"
 	"fmt"
 	"gopkg.in/ldap.v2"
 )
 
 type Client interface {
 	Connect() error
+	ConnectTls(insecureSkipVerify bool) error
 	Search(sr SearchRequest) (*ldap.SearchResult, error)
 	Close()
 }
@@ -56,6 +58,23 @@ func NewClient(bindUsername, bindPassword, ldapServerUrl string) Client {
 
 func (c *ldapClient) Connect() error {
 	ldapConn, err := ldap.Dial("tcp", c.ldapServerUrl)
+	if err != nil {
+		return fmt.Errorf("Cannot connect to LDAP: %v", err)
+	}
+
+	err = ldapConn.Bind(c.bindUsername, c.bindPassword)
+	if err != nil {
+		ldapConn.Close()
+		return fmt.Errorf("Cannot bind to LDAP: %v", err)
+	}
+
+	c.ldapSearcher = ldapConn
+
+	return nil
+}
+
+func (c *ldapClient) ConnectTls(insecureSkipVerify bool) error {
+	ldapConn, err := ldap.DialTLS("tcp", c.ldapServerUrl, &tls.Config{InsecureSkipVerify: insecureSkipVerify})
 	if err != nil {
 		return fmt.Errorf("Cannot connect to LDAP: %v", err)
 	}

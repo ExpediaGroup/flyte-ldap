@@ -23,11 +23,13 @@ import (
 )
 
 type SearchDetails struct {
-	Attributes     []string // i.e. the attributes to be returned by the group, e.g. 'memberOf'
-	BaseDn         string
-	SearchFilter   string
-	GroupAttribute string // the attribute that gives the name of the group from the attribute values, e.g. 'cn'
-	SearchTimeout  int
+	Attributes         []string // i.e. the attributes to be returned by the group, e.g. 'memberOf'
+	BaseDn             string
+	SearchFilter       string
+	GroupAttribute     string // the attribute that gives the name of the group from the attribute values, e.g. 'cn'
+	SearchTimeout      int
+	EnableTLS          bool
+	InsecureSkipVerify bool
 }
 
 type Searcher interface {
@@ -43,7 +45,13 @@ func NewSearcher(client ldap.Client) Searcher {
 }
 
 func (searcher *searcher) GetGroupsFor(sd *SearchDetails, username string) ([]string, error) {
-	if err := searcher.client.Connect(); err != nil {
+	var err error
+	if sd.EnableTLS == true {
+		err = searcher.client.ConnectTls(sd.InsecureSkipVerify)
+	} else {
+		err = searcher.client.Connect()
+	}
+	if err != nil {
 		return nil, err
 	}
 	defer searcher.client.Close()

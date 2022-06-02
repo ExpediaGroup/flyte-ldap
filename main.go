@@ -47,15 +47,25 @@ func main() {
 	if err != nil {
 		logger.Fatalf("LDAP group timeout '%v' not convertible to an integer. Error: %v", configVal("SEARCH_TIMEOUT_IN_SECONDS"), err)
 	}
+	tlsEnabledFlag, err := strconv.ParseBool(configVal("ENABLE_TLS"))
+	if err != nil {
+		logger.Fatalf("TLS enabled flag is not provided '%v' Error: %v", configVal("ENABLE_TLS"), err)
+	}
+	insecureSkipVerify, err := strconv.ParseBool(configVal("INSECURE_SKIP_VERIFY"))
+	if err != nil {
+		insecureSkipVerify = false
+	}
 
 	lc := ldap.NewClient(configVal("BIND_USERNAME"), configVal("BIND_PASSWORD"), configVal("LDAP_URL"))
 	searcher := group.NewSearcher(lc)
 	searchDetails := &group.SearchDetails{
-		Attributes:     strings.Split(configVal("ATTRIBUTES"), ","),
-		BaseDn:         configVal("BASE_DN"),
-		SearchFilter:   configVal("SEARCH_FILTER"),
-		SearchTimeout:  searchTimeout,
-		GroupAttribute: configVal("GROUP_ATTRIBUTE"),
+		Attributes:         strings.Split(configVal("ATTRIBUTES"), ","),
+		BaseDn:             configVal("BASE_DN"),
+		SearchFilter:       configVal("SEARCH_FILTER"),
+		SearchTimeout:      searchTimeout,
+		GroupAttribute:     configVal("GROUP_ATTRIBUTE"),
+		EnableTLS:          tlsEnabledFlag,
+		InsecureSkipVerify: insecureSkipVerify,
 	}
 
 	packDef := flyte.PackDef{
